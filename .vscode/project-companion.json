@@ -1,0 +1,18 @@
+{
+  "bookmarks": [
+    {
+      "id": "3b965f30-e822-4f4b-aa5d-c54f0e68a309",
+      "file": "w:\\shubham\\personal\\vscode_extenstions\\project-companion\\README.md",
+      "line": 92,
+      "label": "update structure",
+      "createdAt": "2025-11-30T16:12:18.929Z"
+    },
+    {
+      "id": "27d1f1d1-6a33-460c-b1e0-4a83bd6035ac",
+      "file": "w:\\shubham\\personal\\vscode_extenstions\\project-companion\\src\\extension.ts",
+      "line": 12,
+      "label": "update bookmark",
+      "createdAt": "2025-11-30T16:59:47.396Z"
+    }
+  ]
+}
