@@ -4,6 +4,10 @@ All notable changes to the "project-companion" extension will be documented in t
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [0.0.2]
+
+- README updated
+
+## [0.0.1]
 
 - Initial release

@@ -33,7 +33,7 @@ These features will be added in future updates:
 1. Open **VS Code**.
 2. Go to the **Extensions** panel (Ctrl+Shift+X).
 3. In the search bar, type **"Project Companion"**.
-4. Find the extension published under your name.
+4. Find the extension published by "Shubham Sutar".
 5. Click **Install** to start using it instantly.
 
 If the extension isn’t published yet, you can install it manually using the VSIX method below.
