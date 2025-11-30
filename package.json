@@ -3,6 +3,7 @@
   "displayName": "Project Companion",
   "description": "Project-level bookmarks, notes and tasks",
   "version": "0.0.1",
+  "publisher": "shubhamstr",
   "engines": {
     "vscode": "^1.106.1"
   },
