@@ -1,71 +1,135 @@
-# project-companion README
+# Project Companion – VS Code Extension
 
-This is the README for your extension "project-companion". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+A lightweight productivity extension designed to help developers manage their projects more efficiently. The initial version introduces **Project Bookmarks**, and future releases will include **Notes**, **Tasks**, and more project-level utilities.
 
 ---
 
-## Following extension guidelines
+## 🚀 Features
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+### ✅ **Project Bookmarks (Current Feature)**
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+Easily bookmark important lines across your project.
 
-## Working with Markdown
+* Add bookmarks for quick navigation.
+* View and manage all bookmarks from a side panel.
+* Bookmark items show: file name, line number, and a short label.
+* Click any bookmark to jump directly to the code location.
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+### 🧪 **Upcoming Features**
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+These features will be added in future updates:
 
-## For more information
+* **Project Notes** – Add notes per file or globally.
+* **Project Tasks** – Create and manage TODO items.
+* **Smart Search** – Search across notes, tasks, and bookmarks.
+* **Project Insights** – Overview of bookmarks, tasks, notes.
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+---
 
-**Enjoy!**
+## 📦 Installation
+
+### Install from VS Code Marketplace
+
+1. Open **VS Code**.
+2. Go to the **Extensions** panel (Ctrl+Shift+X).
+3. In the search bar, type **"Project Companion"**.
+4. Find the extension published under your name.
+5. Click **Install** to start using it instantly.
+
+If the extension isn’t published yet, you can install it manually using the VSIX method below.
+
+### Install from VS Code (VSIX)
+
+1. Open **VS Code**.
+2. Go to **Extensions** panel (Ctrl+Shift+X).
+3. Click the **⋯ (More Actions)** menu.
+4. Choose **Install from VSIX...**.
+5. Select the generated `.vsix` file to install the extension.
+
+### Install from Source
+
+1. Clone or download this repository.
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+3. Build the extension:
+
+   ```bash
+   npm run build
+   ```
+4. Press `F5` in VS Code to run the extension in debug mode.
+
+To package the extension:
+
+```bash
+npm run package
+```
+
+This will generate a `.vsix` file that you can install manually.
+
+---
+
+## 🖱️ Usage
+
+### Add a Bookmark
+
+Open a file → Right-click on a line → Select **Add Bookmark**.
+
+### View Bookmarks
+
+Open the **Project Companion** activity panel → Select **Bookmarks**.
+
+### Remove Bookmark
+
+Hover over a bookmark entry → Click the delete icon.
+
+---
+
+## 📁 Project Structure
+
+```
+project-companion/
+├── src/
+│   ├── extension.ts                 # Main activation file
+│   ├── commands/
+│   │   └── addBookmark.ts           # Add Bookmark
+│   │   └── jumpToBookmark.ts        # Jump To Bookmark
+│   ├── models/
+│   │   └── bookmarks.ts             # Bookmarks Model
+│   ├── storage/
+│   │   └── fileStorage.ts           # Bookmarks Storage
+│   ├── utils/
+│   │   └── decorations.ts           # Bookmark Decorations
+│   └── views/
+│       └── bookmarkProvider.ts      # Bookmark Provider
+├── resources/              # Assets
+├── package.json            # Extension manifest
+├── tsconfig.json           # TypeScript config
+└── README.md               # This file
+```
+
+---
+
+## 🧰 Configuration
+
+The extension stores project-level data in a workspace file located at:
+
+```
+.vscode/project-companion.json
+```
+
+No additional configuration is required for bookmarks.
+
+---
+
+## 🌱 Contributing
+
+Future contributions are welcome! After notes & tasks features are added, the extension will open for PRs. Stay tuned.
+
+---
+
+## ⭐ Support
+
+If you find this extension useful, consider giving it a ⭐ in the marketplace when released!
