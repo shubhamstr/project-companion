@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Bookmark } from '../models/bookmark';
+import { Bookmark } from '../models/bookmark.model';
 import * as vscode from 'vscode';
 
 const FILENAME = '.vscode/project-companion.json';

@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { ProjectNote } from "../types/notes.types";
+import { Note } from "../models/notes.model";
 
 export class NoteTreeItem extends vscode.TreeItem {
-  constructor(public readonly note: ProjectNote) {
+  constructor(public readonly note: Note) {
     super(note.title, vscode.TreeItemCollapsibleState.None);
 
     this.tooltip = note.content;

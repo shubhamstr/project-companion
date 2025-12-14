@@ -1,6 +1,11 @@
-import { ProjectNote } from "../types/notes.types";
+export type NoteScope = "global" | "file"
 
-export interface NotesState {
-  version: 1
-  notes: ProjectNote[]
+export interface Note {
+  id: string
+  scope: NoteScope
+  title: string
+  content: string
+  filePath?: string
+  createdAt: number
+  updatedAt: number
 }

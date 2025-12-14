@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
-import { ProjectNote } from "../types/notes.types";
+import { Note } from "../models/notes.model";
 
 const STORAGE_KEY = "project-companion.notes";
 
 interface NotesState {
   version: 1
-  notes: ProjectNote[]
+  notes: Note[]
 }
 
 const DEFAULT_STATE: NotesState = {
@@ -27,11 +27,11 @@ export class NotesStorage {
     return this.context.workspaceState.update(STORAGE_KEY, state);
   }
 
-  getAll(): ProjectNote[] {
+  getAll(): Note[] {
     return [...this.getState().notes];
   }
 
-  add(note: ProjectNote) {
+  add(note: Note) {
     const state = this.getState();
 
     return this.saveState({
@@ -40,7 +40,7 @@ export class NotesStorage {
     });
   }
 
-  update(note: ProjectNote) {
+  update(note: Note) {
     const state = this.getState();
 
     return this.saveState({
