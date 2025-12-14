@@ -1,40 +1,29 @@
 import * as vscode from "vscode";
-import { ProjectNote } from "../types/notes.types";
+import { NotesStorage } from "../services/notes.storage";
+import { NoteTreeItem } from "./note.treeItem";
 
 export class NotesTreeProvider
-  implements vscode.TreeDataProvider<ProjectNote> {
+  implements vscode.TreeDataProvider<NoteTreeItem> {
 
   private _onDidChangeTreeData =
-    new vscode.EventEmitter<ProjectNote | undefined>();
+    new vscode.EventEmitter<void>();
 
   readonly onDidChangeTreeData =
     this._onDidChangeTreeData.event;
 
-  constructor(private getNotes: () => ProjectNote[]) { }
+  constructor(private storage: NotesStorage) { }
 
   refresh() {
-    this._onDidChangeTreeData.fire(undefined);
+    this._onDidChangeTreeData.fire();
   }
 
-  getTreeItem(note: ProjectNote): vscode.TreeItem {
-    const item = new vscode.TreeItem(
-      note.title,
-      vscode.TreeItemCollapsibleState.None
-    );
-
-    item.tooltip = note.content;
-    item.contextValue = "projectNote";
-
-    item.command = {
-      command: "project-companion.notes.open",
-      title: "Open Note",
-      arguments: [note]
-    };
-
+  getTreeItem(item: NoteTreeItem): vscode.TreeItem {
     return item;
   }
 
-  getChildren(): ProjectNote[] {
-    return this.getNotes();
+  getChildren(): NoteTreeItem[] {
+    return this.storage
+      .getAll()
+      .map(note => new NoteTreeItem(note));
   }
 }

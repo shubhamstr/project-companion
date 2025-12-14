@@ -42,7 +42,7 @@ export async function addNote(storage: NotesStorage) {
 
   storage.add({
     id: crypto.randomUUID(),
-    scope: scopePick.value, // ✅ no warning now
+    scope: scopePick.value,
     title,
     content,
     filePath,

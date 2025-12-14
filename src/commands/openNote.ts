@@ -7,5 +7,7 @@ export async function openNote(note: ProjectNote) {
     language: "markdown"
   });
 
-  vscode.window.showTextDocument(doc, { preview: true });
+  await vscode.window.showTextDocument(doc, {
+    preview: false
+  });
 }

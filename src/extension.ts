@@ -8,6 +8,7 @@ import { createDecorationType, applyDecorationsForEditor, refreshDecorationsForA
 import { NotesTreeProvider } from "./views/notes.tree";
 import { NotesStorage } from "./services/notes.storage";
 import { addNote } from './commands/addNote';
+import { openNote } from "./commands/openNote";
 
 
 // This method is called when your extension is activated
@@ -42,12 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// apply at activation
 	refreshDecorationsForAllOpenEditors();
 
-
 	const notesStorage = new NotesStorage(context);
 
-	const notesProvider = new NotesTreeProvider(() =>
-		notesStorage.getAll()
-	);
+	const notesProvider = new NotesTreeProvider(notesStorage);
 
 	context.subscriptions.push(
 		vscode.window.registerTreeDataProvider(
@@ -61,10 +59,19 @@ export function activate(context: vscode.ExtensionContext) {
 			"project-companion.notes.add",
 			async () => {
 				await addNote(notesStorage);
-				notesProvider.refresh();
+				notesProvider.refresh(); // ✅ now works
 			}
 		)
 	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			"project-companion.notes.open",
+			openNote
+		)
+	);
+
+
 
 }
 

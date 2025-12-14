@@ -5,7 +5,7 @@ export interface ProjectNote {
   scope: NoteScope
   title: string
   content: string
-  filePath?: string // only for file notes
+  filePath?: string
   createdAt: number
   updatedAt: number
 }
