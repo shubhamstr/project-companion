@@ -1,51 +1,80 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
-import { BookmarkProvider } from './views/bookmarkProvider';
-import { addBookmarkCommand } from './commands/addBookmark';
-import { jumpToBookmarkCommand } from './commands/jumpToBookmark';
-import { createDecorationType, applyDecorationsForEditor, refreshDecorationsForAllOpenEditors } from './utils/decorations';
+import * as vscode from "vscode";
+
+// storage
+import { ProjectCompanionStorage } from "./storage/project-companion.storage";
+
+// services
+import { BookmarkService } from "./services/bookmark.service";
+import { NoteService } from "./services/note.service";
+
+// views
+import { BookmarkProvider } from "./views/bookmarkProvider";
 import { NotesTreeProvider } from "./views/notes.tree";
-import { NotesStorage } from "./services/notes.storage";
-import { addNote } from './commands/addNote';
+
+// commands
+import { addBookmarkCommand } from "./commands/addBookmark";
+import { jumpToBookmarkCommand } from "./commands/jumpToBookmark";
+import { addNote } from "./commands/addNote";
 import { openNote } from "./commands/openNote";
 
+// decorations
+import {
+	createDecorationType,
+	applyDecorationsForEditor,
+	refreshDecorationsForAllOpenEditors
+} from "./utils/decorations";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	console.log('Congratulations, your extension "project-companion" is now active!');
-	// const disposable = vscode.commands.registerCommand('project-companion.helloWorld', () => {
-	// 	vscode.window.showInformationMessage('Hello World from Project Companion!');
-	// });
-	// context.subscriptions.push(disposable);
+	console.log('Project Companion activated');
 
-	const provider = new BookmarkProvider();
-	vscode.window.registerTreeDataProvider('project-companion.bookmarks', provider);
+	// ─────────────────────────────────────────────
+	// Shared storage (single source of truth)
+	// ─────────────────────────────────────────────
+	const storage = new ProjectCompanionStorage();
 
-	// register refresh command to let other parts refresh the tree
-	const refreshCmd = vscode.commands.registerCommand('project-companion.refreshBookmarks', () => provider.refresh());
-	context.subscriptions.push(refreshCmd);
+	// ─────────────────────────────────────────────
+	// Services
+	// ─────────────────────────────────────────────
+	const bookmarkService = new BookmarkService(storage);
+	const noteService = new NoteService(storage);
 
-	// register addBookmark and jumpToBookmark
-	context.subscriptions.push(vscode.commands.registerCommand('project-companion.addBookmark', addBookmarkCommand));
-	context.subscriptions.push(vscode.commands.registerCommand('project-companion.jumpToBookmark', jumpToBookmarkCommand));
+	// ─────────────────────────────────────────────
+	// Bookmark Tree
+	// ─────────────────────────────────────────────
+	const bookmarkProvider = new BookmarkProvider(bookmarkService);
 
-	// decoration setup
-	createDecorationType(context);
-	// command to refresh decorations (used after add/delete)
-	context.subscriptions.push(vscode.commands.registerCommand('project-companion.refreshDecorations', () => refreshDecorationsForAllOpenEditors()));
+	context.subscriptions.push(
+		vscode.window.registerTreeDataProvider(
+			"project-companion.bookmarks",
+			bookmarkProvider
+		)
+	);
 
-	// apply decorations when editors change or doc open
-	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => applyDecorationsForEditor(editor)));
-	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => refreshDecorationsForAllOpenEditors()));
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			"project-companion.refreshBookmarks",
+			() => bookmarkProvider.refresh()
+		)
+	);
 
-	// apply at activation
-	refreshDecorationsForAllOpenEditors();
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			"project-companion.addBookmark",
+			() => addBookmarkCommand(bookmarkService)
+		)
+	);
 
-	const notesStorage = new NotesStorage(context);
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			"project-companion.jumpToBookmark",
+			jumpToBookmarkCommand
+		)
+	);
 
-	const notesProvider = new NotesTreeProvider(notesStorage);
+	// ─────────────────────────────────────────────
+	// Notes Tree
+	// ─────────────────────────────────────────────
+	const notesProvider = new NotesTreeProvider(noteService);
 
 	context.subscriptions.push(
 		vscode.window.registerTreeDataProvider(
@@ -58,22 +87,45 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand(
 			"project-companion.notes.add",
 			async () => {
-				await addNote(notesStorage);
-				notesProvider.refresh(); // ✅ now works
+				await addNote(noteService);
+				notesProvider.refresh();
 			}
 		)
 	);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
-			"project-companion.notes.open",
+			"projectCompanion.notes.open",
 			openNote
 		)
 	);
 
+	// ─────────────────────────────────────────────
+	// Decorations
+	// ─────────────────────────────────────────────
+	createDecorationType(context);
 
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			"project-companion.refreshDecorations",
+			() => refreshDecorationsForAllOpenEditors(bookmarkService)
+		)
+	);
 
+	context.subscriptions.push(
+		vscode.window.onDidChangeActiveTextEditor(editor =>
+			applyDecorationsForEditor(editor, bookmarkService)
+		)
+	);
+
+	context.subscriptions.push(
+		vscode.workspace.onDidChangeTextDocument(() =>
+			refreshDecorationsForAllOpenEditors(bookmarkService)
+		)
+	);
+
+	// apply once on activation
+	refreshDecorationsForAllOpenEditors(bookmarkService);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() { }

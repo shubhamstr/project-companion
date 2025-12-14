@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Bookmark } from '../models/bookmark';
+import { Bookmark } from '../models/bookmark.model';
 
 export async function jumpToBookmarkCommand(bookmark?: Bookmark) {
   if (!bookmark) {

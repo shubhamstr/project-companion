@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { NotesStorage } from "../services/notes.storage";
 import { NoteTreeItem } from "./note.treeItem";
+import { NoteService } from "../services/note.service";
 
 export class NotesTreeProvider
   implements vscode.TreeDataProvider<NoteTreeItem> {
@@ -11,7 +11,7 @@ export class NotesTreeProvider
   readonly onDidChangeTreeData =
     this._onDidChangeTreeData.event;
 
-  constructor(private storage: NotesStorage) { }
+  constructor(private noteService: NoteService) { }
 
   refresh() {
     this._onDidChangeTreeData.fire();
@@ -22,7 +22,7 @@ export class NotesTreeProvider
   }
 
   getChildren(): NoteTreeItem[] {
-    return this.storage
+    return this.noteService
       .getAll()
       .map(note => new NoteTreeItem(note));
   }

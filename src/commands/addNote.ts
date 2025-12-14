@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import { NotesStorage } from "../services/notes.storage";
-import { NoteScope } from "../types/notes.types";
+import { Note, NoteScope } from "../models/notes.model";
+import { NoteService } from "../services/note.service";
 
 type ScopePickItem = vscode.QuickPickItem & {
   value: NoteScope
 }
 
-export async function addNote(storage: NotesStorage) {
+export async function addNote(noteService: NoteService) {
   const scopePick = await vscode.window.showQuickPick<ScopePickItem>(
     [
       { label: "Global Note", value: "global" },
@@ -18,12 +18,15 @@ export async function addNote(storage: NotesStorage) {
   if (!scopePick) { return; }
 
   const title = await vscode.window.showInputBox({
-    prompt: "Note title"
+    prompt: "Note title",
+    validateInput: v =>
+      v.trim().length === 0 ? "Title is required" : undefined
   });
   if (!title) { return; }
 
   const content = await vscode.window.showInputBox({
-    prompt: "Note content"
+    prompt: "Note content",
+    placeHolder: "Write your note here..."
   });
   if (!content) { return; }
 
@@ -40,7 +43,7 @@ export async function addNote(storage: NotesStorage) {
     filePath = editor.document.uri.fsPath;
   }
 
-  storage.add({
+  const note: Note = {
     id: crypto.randomUUID(),
     scope: scopePick.value,
     title,
@@ -48,5 +51,11 @@ export async function addNote(storage: NotesStorage) {
     filePath,
     createdAt: Date.now(),
     updatedAt: Date.now()
-  });
+  };
+
+  noteService.add(note);
+
+  vscode.window.showInformationMessage(
+    `Note "${title}" added`
+  );
 }
