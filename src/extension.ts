@@ -5,6 +5,9 @@ import { BookmarkProvider } from './views/bookmarkProvider';
 import { addBookmarkCommand } from './commands/addBookmark';
 import { jumpToBookmarkCommand } from './commands/jumpToBookmark';
 import { createDecorationType, applyDecorationsForEditor, refreshDecorationsForAllOpenEditors } from './utils/decorations';
+import { NotesTreeProvider } from "./views/notes.tree";
+import { NotesStorage } from "./services/notes.storage";
+import { addNote } from './commands/addNote';
 
 
 // This method is called when your extension is activated
@@ -39,6 +42,29 @@ export function activate(context: vscode.ExtensionContext) {
 	// apply at activation
 	refreshDecorationsForAllOpenEditors();
 
+
+	const notesStorage = new NotesStorage(context);
+
+	const notesProvider = new NotesTreeProvider(() =>
+		notesStorage.getAll()
+	);
+
+	context.subscriptions.push(
+		vscode.window.registerTreeDataProvider(
+			"project-companion.notes",
+			notesProvider
+		)
+	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			"project-companion.notes.add",
+			async () => {
+				await addNote(notesStorage);
+				notesProvider.refresh();
+			}
+		)
+	);
 
 }
 

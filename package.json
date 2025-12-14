@@ -27,6 +27,14 @@
       {
         "command": "project-companion.jumpToBookmark",
         "title": "Project Companion: Jump to Bookmark"
+      },
+      {
+        "command": "project-companion.notes.add",
+        "title": "Project Companion: Add Note"
+      },
+      {
+        "command": "project-companion.notes.open",
+        "title": "Open Project Note"
       }
     ],
     "viewsContainers": {
@@ -44,16 +52,37 @@
           "id": "project-companion.bookmarks",
           "name": "Bookmarks",
           "icon": "resources/bookmarks.svg"
+        },
+        {
+          "id": "project-companion.notes",
+          "name": "Project Notes",
+          "icon": "resources/notes.svg"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "devCompanion.addBookmark",
+        "command": "project-companion.addBookmark",
         "key": "ctrl+alt+b",
         "when": "editorTextFocus"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "project-companion.notes.add",
+          "when": "view == project-companion.notes",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "project-companion.notes.open",
+          "when": "view == project-companion.notes",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
