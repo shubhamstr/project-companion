@@ -1,13 +1,21 @@
 import * as vscode from "vscode";
 import { NotesStorage } from "../services/notes.storage";
+import { NoteScope } from "../types/notes.types";
+
+type ScopePickItem = vscode.QuickPickItem & {
+  value: NoteScope
+}
 
 export async function addNote(storage: NotesStorage) {
-  const { v4: uuidv4 } = await import("uuid");
-  const scope = await vscode.window.showQuickPick(
-    ["Global", "Current File"],
-    { placeHolder: "Note scope" }
+  const scopePick = await vscode.window.showQuickPick<ScopePickItem>(
+    [
+      { label: "Global Note", value: "global" },
+      { label: "Current File Note", value: "file" }
+    ],
+    { placeHolder: "Select note scope" }
   );
-  if (!scope) { return; }
+
+  if (!scopePick) { return; }
 
   const title = await vscode.window.showInputBox({
     prompt: "Note title"
@@ -19,17 +27,25 @@ export async function addNote(storage: NotesStorage) {
   });
   if (!content) { return; }
 
-  const editor = vscode.window.activeTextEditor;
+  let filePath: string | undefined;
+
+  if (scopePick.value === "file") {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showWarningMessage(
+        "Open a file to add a file note"
+      );
+      return;
+    }
+    filePath = editor.document.uri.fsPath;
+  }
 
   storage.add({
-    id: uuidv4(),
-    scope: scope === "Global" ? "global" : "file",
+    id: crypto.randomUUID(),
+    scope: scopePick.value, // ✅ no warning now
     title,
     content,
-    filePath:
-      scope === "Current File"
-        ? editor?.document.uri.fsPath
-        : undefined,
+    filePath,
     createdAt: Date.now(),
     updatedAt: Date.now()
   });
